@@ -126,7 +126,7 @@
 
 <script>
 // ============ CONFIGURAÇÃO - COLE A URL DO APPS SCRIPT AQUI ============
-var SHEETS_URL = "https://script.google.com/macros/s/AKfycbxKA0AWtD_PpL-J8tI-noUL03vTP0HxaUJEaqyQTdpgp-RFl7VBwECPnPO6oKPKyTnr/exec";
+var SHEETS_URL = https://script.google.com/macros/s/AKfycbxKA0AWtD_PpL-J8tI-noUL03vTP0HxaUJEaqyQTdpgp-RFl7VBwECPnPO6oKPKyTnr/exec;
 // ========================================================================
 
 var allData = {};
@@ -304,7 +304,7 @@ document.addEventListener("input",function(e){
 function doSubmit(){
   save();
   if(!validate())return;
-  if(SHEETS_URL==="https://script.google.com/macros/s/AKfycbxKA0AWtD_PpL-J8tI-noUL03vTP0HxaUJEaqyQTdpgp-RFl7VBwECPnPO6oKPKyTnr/exec"){alert("Configure a URL do Google Apps Script antes de enviar.\n\nVeja as instruções no arquivo INSTRUCOES_GOOGLE_SHEETS.md");return;}
+  if(SHEETS_URL===https://script.google.com/macros/s/AKfycbxKA0AWtD_PpL-J8tI-noUL03vTP0HxaUJEaqyQTdpgp-RFl7VBwECPnPO6oKPKyTnr/exec){alert("Configure a URL do Google Apps Script antes de enviar.\n\nVeja as instruções no arquivo INSTRUCOES_GOOGLE_SHEETS.md");return;}
   document.getElementById("lo").style.display="flex";
   allData.timestamp=new Date().toISOString();
   fetch(SHEETS_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(allData)}).then(function(){
