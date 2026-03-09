@@ -125,22 +125,20 @@
 <div class="lo" id="lo" style="display:none"><div class="sp"></div><p>Enviando suas respostas...</p></div>
 
 <script>
-// ============ CONFIGURAÇÃO - COLE A URL DO APPS SCRIPT AQUI ============
-var SHEETS_URL = https://script.google.com/macros/s/AKfycbxKA0AWtD_PpL-J8tI-noUL03vTP0HxaUJEaqyQTdpgp-RFl7VBwECPnPO6oKPKyTnr/exec;
-// ========================================================================
+// ============ URL DO GOOGLE APPS SCRIPT ============
+var SHEETS_URL = "https://script.google.com/macros/s/AKfycbxKA0AWtD_PpL-J8tI-noUL03vTP0HxaUJEaqyQTdpgp-RFl7VBwECPnPO6oKPKyTnr/exec";
+// ===================================================
 
 var allData = {};
 var cur = 0;
 var TOT = 9;
 
-// ---- Template builders ----
 function T(n,num,l,req,h){return '<div class="qc"'+(req?' data-rq="1"':'')+'><label class="ql"><span class="qn">'+num+'</span>'+l+(req?'<span class="rq">*</span>':'')+'</label>'+(h?'<div class="qh">'+h+'</div>':'')+'<input type="text" name="'+n+'"><div class="em">Campo obrigatório</div></div>';}
 function A(n,num,l,req,h){return '<div class="qc"'+(req?' data-rq="1"':'')+'><label class="ql"><span class="qn">'+num+'</span>'+l+(req?'<span class="rq">*</span>':'')+'</label>'+(h?'<div class="qh">'+h+'</div>':'')+'<textarea name="'+n+'" rows="3"></textarea><div class="em">Campo obrigatório</div></div>';}
 function R(n,num,l,opts,req){var h='<div class="qc"'+(req?' data-rq="1"':'')+'><label class="ql"><span class="qn">'+num+'</span>'+l+(req?'<span class="rq">*</span>':'')+'</label><div class="os" data-n="'+n+'">';for(var i=0;i<opts.length;i++){h+='<label class="op"><input type="radio" name="'+n+'" value="'+opts[i]+'"><span class="cr"></span><span class="ot">'+opts[i]+'</span></label>';}return h+'</div><div class="em">Selecione uma opção</div></div>';}
 function C(n,num,l,opts,req,h,mx){var s='<div class="qc"'+(req?' data-rq="1"':'')+(mx?' data-mx="'+mx+'"':'')+'><label class="ql"><span class="qn">'+num+'</span>'+l+(req?'<span class="rq">*</span>':'')+'</label>'+(h?'<div class="qh">'+h+'</div>':'')+'<div class="os" data-n="'+n+'">';for(var i=0;i<opts.length;i++){s+='<label class="op"><input type="checkbox" name="'+n+'" value="'+opts[i]+'"><span class="cc"></span><span class="ot">'+opts[i]+'</span></label>';}return s+'</div><div class="em">Selecione pelo menos uma opção</div></div>';}
 function S(n,num,l,opts,req){var h='<div class="qc"'+(req?' data-rq="1"':'')+'><label class="ql"><span class="qn">'+num+'</span>'+l+(req?'<span class="rq">*</span>':'')+'</label><div data-n="'+n+'">';for(var i=0;i<opts.length;i++){h+='<label class="so"><input type="radio" name="'+n+'" value="'+(i+1)+'"><span class="sn2">'+(i+1)+'</span><span class="stx">'+opts[i]+'</span></label>';}return h+'</div><div class="em">Selecione uma opção</div></div>';}
 
-// ---- All Sections HTML ----
 function getSec(i){
   if(i===0) return '<div class="ic"><div class="ii"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="32" height="32"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><path d="M9 14l2 2 4-4"/></svg></div><h2>Fase 1 - Discovery</h2><p>Este questionário faz parte do projeto de reestruturação do Departamento Financeiro do Grupo Kalt. Suas respostas serão usadas para redesenhar processos, definir responsabilidades e melhorar a rotina.</p><p><strong>Não existem respostas certas ou erradas</strong> - queremos entender exatamente como as coisas funcionam hoje.</p><div class="is"><div><div class="isn">33</div><div class="isl">Perguntas</div></div><div><div class="isn">8</div><div class="isl">Seções</div></div><div><div class="isn">~30</div><div class="isl">Minutos</div></div></div></div><div class="ib"><strong>Confidencialidade:</strong> Suas respostas serão tratadas com sigilo e usadas exclusivamente para o projeto de reestruturação.</div>';
 
@@ -163,7 +161,6 @@ function getSec(i){
   return "";
 }
 
-// ---- Save current section data ----
 function save(){
   var box=document.getElementById("box");
   var txts=box.querySelectorAll("input[type=text],textarea");
@@ -176,7 +173,6 @@ function save(){
   for(var k in cg){allData[k]=cg[k].join("; ");}
 }
 
-// ---- Restore saved data ----
 function restore(){
   var box=document.getElementById("box");
   var txts=box.querySelectorAll("input[type=text],textarea");
@@ -187,7 +183,6 @@ function restore(){
   for(var i=0;i<chks.length;i++){var sv=allData[chks[i].name]||"";if(sv.split("; ").indexOf(chks[i].value)!==-1){chks[i].checked=true;var p=chks[i].closest(".op");if(p)p.classList.add("s");}}
 }
 
-// ---- Validate ----
 function validate(){
   if(cur===0)return true;
   var ok=true;
@@ -211,26 +206,19 @@ function validate(){
   return ok;
 }
 
-// ---- Render ----
 function render(){
   document.getElementById("box").innerHTML=getSec(cur);
-
-  // Progress
   var ps=document.getElementById("ps");ps.innerHTML="";
   for(var i=0;i<TOT;i++){var d=document.createElement("div");if(i<cur)d.className="d";if(i===cur)d.className="n";ps.appendChild(d);}
   document.getElementById("pf").style.width=(cur/(TOT-1)*100)+"%";
   document.getElementById("sc").textContent=cur===0?"Introdução":"Seção "+cur+" de 8";
-
-  // Buttons
   document.getElementById("bp").style.visibility=cur===0?"hidden":"visible";
   if(cur===TOT-1){document.getElementById("bn").style.display="none";document.getElementById("bx").style.display="inline-flex";}
   else{document.getElementById("bn").style.display="inline-flex";document.getElementById("bx").style.display="none";document.getElementById("bn").innerHTML=cur===0?"Começar &#8250;":"Próxima &#8250;";}
-
   restore();
   window.scrollTo(0,0);
 }
 
-// ---- Navigate ----
 function go(dir){
   save();
   if(dir>0&&!validate())return;
@@ -240,14 +228,12 @@ function go(dir){
   render();
 }
 
-// ---- Click handlers (event delegation) ----
 document.addEventListener("click",function(e){
   var op=e.target.closest(".op");
   if(op){
     e.preventDefault();
     var inp=op.querySelector("input");
     if(!inp)return;
-
     if(inp.type==="radio"){
       var container=op.closest(".os")||op.parentElement;
       var all=container.querySelectorAll(".op");
@@ -257,14 +243,9 @@ document.addEventListener("click",function(e){
     }else if(inp.type==="checkbox"){
       var card=op.closest(".qc");
       var mx=card?parseInt(card.getAttribute("data-mx")||"999"):999;
-      if(!inp.checked){
-        var cnt=op.closest(".os").querySelectorAll("input:checked").length;
-        if(cnt>=mx)return;
-      }
+      if(!inp.checked){var cnt=op.closest(".os").querySelectorAll("input:checked").length;if(cnt>=mx)return;}
       inp.checked=!inp.checked;
       if(inp.checked)op.classList.add("s");else op.classList.remove("s");
-
-      // Nenhuma dessas
       var os=op.closest(".os");
       if(inp.value.indexOf("Nenhuma")===0&&inp.checked){
         var all=os.querySelectorAll("input[type=checkbox]");
@@ -274,12 +255,10 @@ document.addEventListener("click",function(e){
         if(nn){nn.checked=false;nn.closest(".op").classList.remove("s");}
       }
     }
-    // Clear error
     var qc=op.closest(".qc");
     if(qc){qc.classList.remove("er");var em=qc.querySelector(".em");if(em)em.classList.remove("on");}
     return;
   }
-
   var so=e.target.closest(".so");
   if(so){
     e.preventDefault();
@@ -293,18 +272,15 @@ document.addEventListener("click",function(e){
   }
 });
 
-// Clear errors on typing
 document.addEventListener("input",function(e){
   if(e.target.matches("input[type=text],textarea")){
     if(e.target.value.trim()){var qc=e.target.closest(".qc");if(qc){qc.classList.remove("er");var em=qc.querySelector(".em");if(em)em.classList.remove("on");}}
   }
 });
 
-// ---- Submit ----
 function doSubmit(){
   save();
   if(!validate())return;
-  if(SHEETS_URL===https://script.google.com/macros/s/AKfycbxKA0AWtD_PpL-J8tI-noUL03vTP0HxaUJEaqyQTdpgp-RFl7VBwECPnPO6oKPKyTnr/exec){alert("Configure a URL do Google Apps Script antes de enviar.\n\nVeja as instruções no arquivo INSTRUCOES_GOOGLE_SHEETS.md");return;}
   document.getElementById("lo").style.display="flex";
   allData.timestamp=new Date().toISOString();
   fetch(SHEETS_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(allData)}).then(function(){
@@ -318,7 +294,6 @@ function doSubmit(){
   });
 }
 
-// ---- Init ----
 render();
 </script>
 </body>
