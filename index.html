@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questionário - Rotinas Financeiras | Grupo Kalt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --db: #0C3B6F; --dbl: #0E4A8A; --dbd: #082D55;
+    --lima: #7CB518; --limad: #6A9E14;
+    --bg: #F7F8FA; --card: #FFF; --txt: #1A1A2E;
+    --txs: #5A5A7A; --txm: #8E8EA0; --bdr: #E2E4EA;
+    --err: #D93025; --errbg: #FEF0EF; --ok: #188038; --okbg: #E6F4EA;
+    --r: 10px; --rs: 6px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);line-height:1.6}
+
+  .hdr{background:linear-gradient(135deg,var(--db),var(--dbd));color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 8px 30px rgba(12,59,111,.12)}
+  .hdr-in{max-width:800px;margin:0 auto;padding:20px 24px 8px;display:flex;align-items:center;gap:12px}
+  .hdr-logo{width:38px;height:38px;background:var(--lima);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:18px;color:#fff;flex-shrink:0}
+  .hdr h1{font-size:18px;font-weight:600;letter-spacing:-.02em}
+  .hdr-sub{font-size:13px;opacity:.7}
+  .sc{text-align:center;font-size:12px;opacity:.7;padding:8px 24px 10px;font-family:'IBM Plex Mono',monospace;max-width:800px;margin:0 auto}
+  .ps{display:flex;gap:4px;padding:0 24px 14px;max-width:800px;margin:0 auto}
+  .ps div{flex:1;height:3px;background:rgba(255,255,255,.2);border-radius:2px}
+  .ps div.d{background:rgba(124,181,24,.6)} .ps div.n{background:var(--lima)}
+  .pb{background:rgba(255,255,255,.15);height:4px;width:100%}
+  .pf{height:100%;background:var(--lima);border-radius:0 2px 2px 0;transition:width .4s}
+
+  .ct{max-width:800px;margin:0 auto;padding:24px 24px 100px}
+  .sn{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:var(--lima);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+  .st{font-size:24px;font-weight:700;color:var(--db);letter-spacing:-.03em;margin-bottom:8px}
+  .sd{color:var(--txs);font-size:14px;margin-bottom:20px}
+  .ib{background:linear-gradient(135deg,#EEF4FF,#F0F7FF);border-left:3px solid var(--db);border-radius:0 var(--rs) var(--rs) 0;padding:14px 18px;margin-bottom:24px;font-size:13.5px;color:var(--db);line-height:1.6}
+  .ib strong{font-weight:600}
+
+  .qc{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:22px 24px;margin-bottom:16px;box-shadow:0 1px 3px rgba(12,59,111,.06)}
+  .qc.er{border-color:var(--err);box-shadow:0 0 0 3px var(--errbg)}
+  .ql{display:block;font-size:15px;font-weight:600;margin-bottom:4px;line-height:1.5}
+  .ql .qn{color:var(--db);font-family:'IBM Plex Mono',monospace;font-size:13px;margin-right:6px}
+  .rq{color:var(--err);margin-left:2px}
+  .qh{font-size:13px;color:var(--txm);margin-bottom:14px;font-style:italic}
+  .em{font-size:12px;color:var(--err);margin-top:8px;display:none}
+  .em.on{display:block}
+
+  input[type=text],textarea{width:100%;padding:10px 14px;border:1.5px solid var(--bdr);border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--txt);background:var(--bg);outline:none}
+  input[type=text]:focus,textarea:focus{border-color:var(--db);box-shadow:0 0 0 3px rgba(12,59,111,.08);background:#fff}
+  textarea{resize:vertical;min-height:80px}
+
+  .os{display:flex;flex-direction:column;gap:8px}
+  .op{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1.5px solid var(--bdr);border-radius:var(--rs);cursor:pointer;background:var(--bg);transition:border-color .2s,background .2s;user-select:none}
+  .op:hover{border-color:var(--db);background:#F0F4FA}
+  .op.s{border-color:var(--db);background:#EBF0FA}
+  .op input{position:absolute;opacity:0;pointer-events:none}
+  .cr,.cc{width:20px;height:20px;border:2px solid #C0C4CC;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;margin-top:1px}
+  .cr{border-radius:50%} .cc{border-radius:4px}
+  .op.s .cr{border-color:var(--db)}
+  .op.s .cr::after{content:"";width:10px;height:10px;background:var(--db);border-radius:50%}
+  .op.s .cc{border-color:var(--db);background:var(--db)}
+  .op.s .cc::after{content:"";width:6px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);margin-top:-2px}
+  .ot{font-size:14px;line-height:1.5}
+
+  .so{display:flex;align-items:center;gap:12px;padding:8px 14px;border:1.5px solid var(--bdr);border-radius:var(--rs);cursor:pointer;background:var(--bg);transition:all .2s;margin-bottom:6px}
+  .so:hover{border-color:var(--db);background:#F0F4FA}
+  .so.s{border-color:var(--db);background:#EBF0FA}
+  .so input{position:absolute;opacity:0}
+  .sn2{width:28px;height:28px;border-radius:50%;background:var(--bdr);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;color:var(--txs);flex-shrink:0;transition:all .2s}
+  .so.s .sn2{background:var(--db);color:#fff}
+  .stx{font-size:13.5px;color:var(--txs)}
+
+  .nb{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--bdr);padding:14px 24px;z-index:100;box-shadow:0 -4px 16px rgba(0,0,0,.06)}
+  .ni{max-width:800px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+  .bt{padding:11px 28px;border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:8px}
+  .bp{background:var(--db);color:#fff} .bp:hover{background:var(--dbl)}
+  .bs{background:transparent;color:var(--txs);border:1.5px solid var(--bdr)} .bs:hover{border-color:var(--db);color:var(--db)}
+  .bk{background:var(--lima);color:#fff;padding:13px 36px;font-size:15px} .bk:hover{background:var(--limad)}
+
+  .ic{background:#fff;border-radius:var(--r);padding:32px;box-shadow:0 4px 12px rgba(12,59,111,.08);border:1px solid var(--bdr);text-align:center;margin-bottom:20px}
+  .ii{width:64px;height:64px;background:linear-gradient(135deg,var(--db),var(--dbl));border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+  .ic h2{font-size:22px;color:var(--db);margin-bottom:12px}
+  .ic p{color:var(--txs);font-size:14.5px;line-height:1.7;max-width:560px;margin:0 auto 16px}
+  .is{display:flex;justify-content:center;gap:32px;margin-top:24px;padding-top:20px;border-top:1px solid var(--bdr)}
+  .isn{font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:700;color:var(--db)}
+  .isl{font-size:12px;color:var(--txm);text-transform:uppercase;letter-spacing:.05em}
+
+  .si{width:80px;height:80px;background:var(--okbg);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:60px auto 24px}
+  .si svg{width:40px;height:40px;color:var(--ok)}
+
+  .lo{position:fixed;inset:0;background:rgba(255,255,255,.9);z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+  .sp{width:40px;height:40px;border:3px solid var(--bdr);border-top-color:var(--db);border-radius:50%;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  @media(max-width:640px){
+    .hdr-in{padding:16px 16px 8px} .ct{padding:16px 16px 100px} .qc{padding:18px 16px}
+    .st{font-size:20px} .ic{padding:24px 16px} .bt{padding:10px 20px;font-size:13px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hdr" id="hdr">
+  <div class="hdr-in">
+    <div class="hdr-logo">K</div>
+    <div><h1>Questionário de Mapeamento</h1><div class="hdr-sub">Rotinas do Departamento Financeiro - Grupo Kalt</div></div>
+  </div>
+  <div class="sc" id="sc">Introdução</div>
+  <div class="ps" id="ps"></div>
+  <div class="pb"><div class="pf" id="pf" style="width:0%"></div></div>
+</header>
+
+<main class="ct"><div id="box"></div></main>
+
+<nav class="nb" id="nav">
+  <div class="ni">
+    <button class="bt bs" id="bp" onclick="go(-1)" style="visibility:hidden">&#8249; Anterior</button>
+    <button class="bt bp" id="bn" onclick="go(1)">Começar &#8250;</button>
+    <button class="bt bk" id="bx" onclick="doSubmit()" style="display:none">Enviar Questionário &#10003;</button>
+  </div>
+</nav>
+
+<div class="lo" id="lo" style="display:none"><div class="sp"></div><p>Enviando suas respostas...</p></div>
+
+<script>
+// ============ CONFIGURAÇÃO - COLE A URL DO APPS SCRIPT AQUI ============
+var SHEETS_URL = "https://script.google.com/macros/s/AKfycbybpy3-RsnqtBmz_h_gL8QPxIrbSw0mT-J-Mv8LXXH5HhsX4NwAluxnmz7q6kuclRMQ/exec";
+// ========================================================================
+
+var allData = {};
+var cur = 0;
+var TOT = 9;
+
+// ---- Template builders ----
+function T(n,num,l,req,h){return '<div class="qc"'+(req?' data-rq="1"':'')+'><label class="ql"><span class="qn">'+num+'</span>'+l+(req?'<span class="rq">*</span>':'')+'</label>'+(h?'<div class="qh">'+h+'</div>':'')+'<input type="text" name="'+n+'"><div class="em">Campo obrigatório</div></div>';}
+function A(n,num,l,req,h){return '<div class="qc"'+(req?' data-rq="1"':'')+'><label class="ql"><span class="qn">'+num+'</span>'+l+(req?'<span class="rq">*</span>':'')+'</label>'+(h?'<div class="qh">'+h+'</div>':'')+'<textarea name="'+n+'" rows="3"></textarea><div class="em">Campo obrigatório</div></div>';}
+function R(n,num,l,opts,req){var h='<div class="qc"'+(req?' data-rq="1"':'')+'><label class="ql"><span class="qn">'+num+'</span>'+l+(req?'<span class="rq">*</span>':'')+'</label><div class="os" data-n="'+n+'">';for(var i=0;i<opts.length;i++){h+='<label class="op"><input type="radio" name="'+n+'" value="'+opts[i]+'"><span class="cr"></span><span class="ot">'+opts[i]+'</span></label>';}return h+'</div><div class="em">Selecione uma opção</div></div>';}
+function C(n,num,l,opts,req,h,mx){var s='<div class="qc"'+(req?' data-rq="1"':'')+(mx?' data-mx="'+mx+'"':'')+'><label class="ql"><span class="qn">'+num+'</span>'+l+(req?'<span class="rq">*</span>':'')+'</label>'+(h?'<div class="qh">'+h+'</div>':'')+'<div class="os" data-n="'+n+'">';for(var i=0;i<opts.length;i++){s+='<label class="op"><input type="checkbox" name="'+n+'" value="'+opts[i]+'"><span class="cc"></span><span class="ot">'+opts[i]+'</span></label>';}return s+'</div><div class="em">Selecione pelo menos uma opção</div></div>';}
+function S(n,num,l,opts,req){var h='<div class="qc"'+(req?' data-rq="1"':'')+'><label class="ql"><span class="qn">'+num+'</span>'+l+(req?'<span class="rq">*</span>':'')+'</label><div data-n="'+n+'">';for(var i=0;i<opts.length;i++){h+='<label class="so"><input type="radio" name="'+n+'" value="'+(i+1)+'"><span class="sn2">'+(i+1)+'</span><span class="stx">'+opts[i]+'</span></label>';}return h+'</div><div class="em">Selecione uma opção</div></div>';}
+
+// ---- All Sections HTML ----
+function getSec(i){
+  if(i===0) return '<div class="ic"><div class="ii"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="32" height="32"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><path d="M9 14l2 2 4-4"/></svg></div><h2>Fase 1 - Discovery</h2><p>Este questionário faz parte do projeto de reestruturação do Departamento Financeiro do Grupo Kalt. Suas respostas serão usadas para redesenhar processos, definir responsabilidades e melhorar a rotina.</p><p><strong>Não existem respostas certas ou erradas</strong> - queremos entender exatamente como as coisas funcionam hoje.</p><div class="is"><div><div class="isn">33</div><div class="isl">Perguntas</div></div><div><div class="isn">8</div><div class="isl">Seções</div></div><div><div class="isn">~30</div><div class="isl">Minutos</div></div></div></div><div class="ib"><strong>Confidencialidade:</strong> Suas respostas serão tratadas com sigilo e usadas exclusivamente para o projeto de reestruturação.</div>';
+
+  if(i===1) return '<div class="sn">Seção 01</div><div class="st">Identificação</div><div class="sd">Informações básicas sobre você e sua trajetória na Kalt.</div>'+T("q1_1_nome","1.1","Seu nome completo",1,"Nome e sobrenome")+T("q1_2_cargo","1.2","Cargo atual",1)+R("q1_3_tempo","1.3","Há quanto tempo trabalha na Kalt?",["Menos de 6 meses","6 meses a 1 ano","1 a 2 anos","2 a 5 anos","Mais de 5 anos"],1)+R("q1_4_formacao","1.4","Qual sua formação?",["Ensino médio completo","Técnico em Contabilidade/Administração","Superior incompleto (cursando)","Superior completo - Contabilidade","Superior completo - Administração","Superior completo - Outro (especifique abaixo)","Pós-graduação"],1)+T("q1_5_formacao_outro","1.5","Se marcou 'Outro', especifique:",0);
+
+  if(i===2) return '<div class="sn">Seção 02</div><div class="st">Atividades e Rotina Diária</div><div class="sd">Queremos entender TUDO o que você faz no dia a dia.</div><div class="ib"><strong>Importante:</strong> Marque tudo, mesmo que esporadicamente.</div>'+C("q2_1_ap","2.1","Atividades de CONTAS A PAGAR",["Lançamento de NFs no Sankhya","Lançamento de despesas recorrentes (luz, água, aluguel, telefone)","Lançamento de tarifas e taxas bancárias","Lançamento de parcelas empréstimos/consórcios","Conferência de NFs (valores, impostos, dados)","Programação/agendamento de pagamentos no banco","Emissão de borderô/remessa CNAB","Controle de adiantamentos a fornecedores","Baixa de títulos pagos no Sankhya","Controle de cartão de crédito corporativo","Controle e lançamento de reembolsos","Acompanhamento de parcelamentos fiscais","Nenhuma dessas"],1,"Marque TODAS que se aplicam")+C("q2_2_ar","2.2","Atividades de CONTAS A RECEBER",["Conferência de faturamento vs. pedidos/contratos","Emissão de boletos","Envio de boletos/cobranças aos clientes","Baixa de recebimentos no Sankhya","Cobrança de inadimplentes (telefone/WhatsApp/e-mail)","Análise de crédito de novos clientes","Renegociação de dívidas com clientes","Controle de aging de recebíveis","Negativação SPC/Serasa","Relatórios de inadimplência","Nenhuma dessas"],1,"Marque TODAS que se aplicam")+C("q2_3_tesouraria","2.3","Atividades de TESOURARIA/BANCOS",["Conciliação bancária diária","Importação de extratos (OFX/CNAB)","Transferências entre contas do grupo","Aplicações e resgates de investimentos","Controle de saldo das contas bancárias","Contato com gerentes de banco","Liberação/envio de remessas de pagamento","Controle de cheques","Nenhuma dessas"],1,"Marque TODAS que se aplicam")+C("q2_4_outras","2.4","OUTRAS atividades",["Montagem de fluxo de caixa realizado","Projeção de fluxo de caixa","Posição de caixa diária","Controle de consórcios","Controle de empréstimos e financiamentos","Controle de seguros e apólices","Controle de contratos de aluguel","Prestação de contas Espresso","Relatórios gerenciais","Atendimento ao escritório contábil","Controle de PRODEIC (FUNDEIC/FUNDED)","Arquivo de documentos","Nenhuma dessas"],1,"Marque TODAS que se aplicam")+A("q2_5_outras_livre","2.5","Atividade que NÃO apareceu nas listas acima?",0,"Descreva tudo, mesmo que pareça menor.");
+
+  if(i===3) return '<div class="sn">Seção 03</div><div class="st">Frequência, Volume e Tempo</div><div class="sd">Volume de trabalho e onde o tempo é mais consumido.</div>'+R("q3_1_volume_ap","3.1","Quantos lançamentos financeiros (AP) faz por dia?",["Nenhum - não faço lançamentos de AP","1 a 10","11 a 30","31 a 50","Mais de 50"],1)+R("q3_2_volume_conciliacao","3.2","Quantas conciliações bancárias faz por dia?",["Nenhuma - não faço conciliação","1 a 3 contas","4 a 8 contas","9 a 17 contas (todas)"],1)+R("q3_3_volume_cobranca","3.3","Quantas cobranças (ligações/mensagens) por dia?",["Nenhuma - não faço cobrança","1 a 5","6 a 15","16 a 30","Mais de 30"],1)+C("q3_4_empresas","3.4","Quais empresas do grupo atende?",["Kalt System","Kalt Refrigeração - Matriz","Kalt Refrigeração - Filial 2","Kalt Refrigeração - Filial 3","Kalt Comércio - Matriz","Kalt Service","Kalt Brasil","WK Empreendimentos","Todas as empresas do grupo"],1,"Marque TODAS")+A("q3_5_mais_tempo","3.5","Qual atividade consome MAIS tempo no seu dia?",1,"Descreva e estime o tempo (ex: 'conciliação bancária - 2h/dia')")+A("q3_6_automatizar","3.6","Atividade REPETITIVA que poderia ser automatizada?",0,"O que faz manualmente e o sistema poderia fazer.");
+
+  if(i===4) return '<div class="sn">Seção 04</div><div class="st">Sistemas e Ferramentas</div><div class="sd">Nível de domínio das ferramentas utilizadas.</div>'+C("q4_1_sankhya","4.1","Módulos do Sankhya que utiliza",["Financeiro (lançamentos, baixas)","Bancário (remessas, retornos, conciliação)","Compras","Faturamento/Vendas","Relatórios/Dashboards","Cadastros (clientes, fornecedores)","Não utilizo o Sankhya"],1)+C("q4_2_ferramentas","4.2","Ferramentas além do Sankhya",["Excel/Google Sheets","Internet banking","Espresso (cartão corporativo)","WhatsApp","E-mail","Outro (especifique abaixo)"],1)+T("q4_3_ferramentas_outro","4.3","Se marcou 'Outro', quais?",0)+S("q4_4_sankhya_nivel","4.4","Domínio do Sankhya",["Básico - muita dificuldade","Essencial, com limitações","Razoável - maioria das tarefas","Bom - conheço bem os módulos","Avançado - além do básico"],1)+S("q4_5_excel_nivel","4.5","Domínio de Excel/planilhas",["Básico (digitação, formatação)","SOMA, MÉDIA, filtros","PROCV, SE, tabela dinâmica","Fórmulas avançadas, gráficos","Macros, Power Query, dashboards"],1);
+
+  if(i===5) return '<div class="sn">Seção 05</div><div class="st">Processos, Dificuldades e Melhorias</div><div class="sd">As dores do dia a dia são essenciais para construirmos algo melhor.</div>'+C("q5_1_dificuldades","5.1","Maiores DIFICULDADES no dia a dia",["Falta de clareza sobre minhas responsabilidades","Atividades de outros acabam comigo","Informações atrasadas de outros departamentos","Escritório contábil envia em cima da hora","Falta de procedimento padronizado","Dificuldade com Sankhya","Volume acima da capacidade","Retrabalho por erros de lançamento","Falta de treinamento","Não sei a quem recorrer","Interrupções constantes","Planilhas paralelas não batem com sistema"],1,"Marque até 5",5)+A("q5_2_mudar","5.2","Se pudesse mudar UMA COISA na rotina, o que seria?",1)+A("q5_3_outra_area","5.3","Atividade que deveria ser de outra área/pessoa?",0,"Ex: 'lanço NF de frete, mas deveria ser do compras'")+R("q5_4_backup","5.4","Quando se ausenta, quem assume?",["Colega específica do financeiro","Qualquer colega disponível","Ninguém - acumula","O gestor assume","Não sei / nunca precisei"],1)+R("q5_5_checklist","5.5","Possui checklist para não esquecer tarefas?",["Sim, tenho anotações/checklist","Não, faço tudo de memória","Uso lembretes no sistema/celular","Outro método (especifique abaixo)"],1)+T("q5_6_outro_metodo","5.6","Se marcou 'Outro', descreva:",0);
+
+  if(i===6) return '<div class="sn">Seção 06</div><div class="st">Comunicação e Interfaces</div><div class="sd">Como o financeiro se conecta com outras áreas.</div>'+C("q6_1_interfaces","6.1","Áreas de FORA do financeiro que mais interage",["Compras","Comercial/Vendas","Fiscal/Tributário","RH/DP","Operação/Técnicos","Diretoria/Sócios","Escritório contábil","Bancos","Fornecedores","Clientes","TI/Suporte"],1)+A("q6_2_gargalos","6.2","A comunicação funciona bem ou gera problemas?",1,"Descreva os principais gargalos")+A("q6_3_contabilidade","6.3","Quando a contabilidade pede informações, como recebe e em quanto tempo responde?",0);
+
+  if(i===7) return '<div class="sn">Seção 07</div><div class="st">Fechamento Mensal e Prazos</div><div class="sd">Dinâmica dos seus prazos e fechamento.</div>'+R("q7_1_prazos","7.1","Sabe quais são seus prazos de fechamento?",["Sim, prazos claros e definidos","Ideia geral, não formalizado","Não tenho prazos definidos"],1)+A("q7_2_rotina_semanal","7.2","Como é sua rotina semanal típica?",1,"Ex: 'Segunda: concilio bancos. Terça: programo pagamentos...'")+R("q7_3_carga_fechamento","7.3","Na primeira semana do mês, sua carga:",["Aumenta muito - fico sobrecarregada","Aumenta um pouco","É igual ao resto do mês","Diminui (maior carga no meio/fim)"],1);
+
+  if(i===8) return '<div class="sn">Seção 08</div><div class="st">Desenvolvimento e Expectativas</div><div class="sd">Onde você quer crescer e como podemos ajudar.</div>'+C("q8_1_desenvolvimento","8.1","Áreas que gostaria de se desenvolver",["Excel/planilhas avançadas","Domínio do Sankhya","Análise financeira e indicadores","Fluxo de caixa e projeções","Conciliação bancária avançada","Análise de crédito e cobrança","Controladoria e relatórios gerenciais","Gestão de processos"],1,"Marque até 3",3)+R("q8_2_foco","8.2","Se reestruturada, qual área gostaria de atuar?",["Contas a Pagar e Tesouraria","Contas a Receber e Cobrança","Conciliação e Controles","Sem preferência - onde precisar"],1)+A("q8_3_livre","8.3","Espaço aberto: algo mais?",0,"Sobre rotina, dificuldades, sugestões - tudo será levado em conta.")+'<div class="ib" style="margin-top:24px"><strong>Obrigado pela colaboração!</strong> Suas respostas são fundamentais para o projeto.</div>';
+
+  return "";
+}
+
+// ---- Save current section data ----
+function save(){
+  var box=document.getElementById("box");
+  var txts=box.querySelectorAll("input[type=text],textarea");
+  for(var i=0;i<txts.length;i++){if(txts[i].name)allData[txts[i].name]=txts[i].value.trim();}
+  var rads=box.querySelectorAll("input[type=radio]:checked");
+  for(var i=0;i<rads.length;i++){allData[rads[i].name]=rads[i].value;}
+  var cg={};
+  var chks=box.querySelectorAll("input[type=checkbox]:checked");
+  for(var i=0;i<chks.length;i++){if(!cg[chks[i].name])cg[chks[i].name]=[];cg[chks[i].name].push(chks[i].value);}
+  for(var k in cg){allData[k]=cg[k].join("; ");}
+}
+
+// ---- Restore saved data ----
+function restore(){
+  var box=document.getElementById("box");
+  var txts=box.querySelectorAll("input[type=text],textarea");
+  for(var i=0;i<txts.length;i++){if(txts[i].name&&allData[txts[i].name])txts[i].value=allData[txts[i].name];}
+  var rads=box.querySelectorAll("input[type=radio]");
+  for(var i=0;i<rads.length;i++){if(allData[rads[i].name]===rads[i].value){rads[i].checked=true;var p=rads[i].closest(".op,.so");if(p)p.classList.add("s");}}
+  var chks=box.querySelectorAll("input[type=checkbox]");
+  for(var i=0;i<chks.length;i++){var sv=allData[chks[i].name]||"";if(sv.split("; ").indexOf(chks[i].value)!==-1){chks[i].checked=true;var p=chks[i].closest(".op");if(p)p.classList.add("s");}}
+}
+
+// ---- Validate ----
+function validate(){
+  if(cur===0)return true;
+  var ok=true;
+  var cards=document.querySelectorAll("#box .qc[data-rq]");
+  for(var c=0;c<cards.length;c++){
+    var card=cards[c];
+    var has=false;
+    var ti=card.querySelector("input[type=text]");
+    var ta=card.querySelector("textarea");
+    var ra=card.querySelectorAll("input[type=radio]");
+    var ch=card.querySelectorAll("input[type=checkbox]");
+    if(ti&&!ra.length&&!ch.length)has=ti.value.trim().length>0;
+    if(ta)has=ta.value.trim().length>0;
+    if(ra.length){for(var r=0;r<ra.length;r++){if(ra[r].checked){has=true;break;}}}
+    if(ch.length){for(var x=0;x<ch.length;x++){if(ch[x].checked){has=true;break;}}}
+    var em=card.querySelector(".em");
+    if(!has){ok=false;card.classList.add("er");if(em)em.classList.add("on");}
+    else{card.classList.remove("er");if(em)em.classList.remove("on");}
+  }
+  if(!ok){var fe=document.querySelector("#box .qc.er");if(fe)fe.scrollIntoView({behavior:"smooth",block:"center"});}
+  return ok;
+}
+
+// ---- Render ----
+function render(){
+  document.getElementById("box").innerHTML=getSec(cur);
+
+  // Progress
+  var ps=document.getElementById("ps");ps.innerHTML="";
+  for(var i=0;i<TOT;i++){var d=document.createElement("div");if(i<cur)d.className="d";if(i===cur)d.className="n";ps.appendChild(d);}
+  document.getElementById("pf").style.width=(cur/(TOT-1)*100)+"%";
+  document.getElementById("sc").textContent=cur===0?"Introdução":"Seção "+cur+" de 8";
+
+  // Buttons
+  document.getElementById("bp").style.visibility=cur===0?"hidden":"visible";
+  if(cur===TOT-1){document.getElementById("bn").style.display="none";document.getElementById("bx").style.display="inline-flex";}
+  else{document.getElementById("bn").style.display="inline-flex";document.getElementById("bx").style.display="none";document.getElementById("bn").innerHTML=cur===0?"Começar &#8250;":"Próxima &#8250;";}
+
+  restore();
+  window.scrollTo(0,0);
+}
+
+// ---- Navigate ----
+function go(dir){
+  save();
+  if(dir>0&&!validate())return;
+  var next=cur+dir;
+  if(next<0||next>=TOT)return;
+  cur=next;
+  render();
+}
+
+// ---- Click handlers (event delegation) ----
+document.addEventListener("click",function(e){
+  var op=e.target.closest(".op");
+  if(op){
+    e.preventDefault();
+    var inp=op.querySelector("input");
+    if(!inp)return;
+
+    if(inp.type==="radio"){
+      var container=op.closest(".os")||op.parentElement;
+      var all=container.querySelectorAll(".op");
+      for(var i=0;i<all.length;i++)all[i].classList.remove("s");
+      op.classList.add("s");
+      inp.checked=true;
+    }else if(inp.type==="checkbox"){
+      var card=op.closest(".qc");
+      var mx=card?parseInt(card.getAttribute("data-mx")||"999"):999;
+      if(!inp.checked){
+        var cnt=op.closest(".os").querySelectorAll("input:checked").length;
+        if(cnt>=mx)return;
+      }
+      inp.checked=!inp.checked;
+      if(inp.checked)op.classList.add("s");else op.classList.remove("s");
+
+      // Nenhuma dessas
+      var os=op.closest(".os");
+      if(inp.value.indexOf("Nenhuma")===0&&inp.checked){
+        var all=os.querySelectorAll("input[type=checkbox]");
+        for(var i=0;i<all.length;i++){if(all[i]!==inp){all[i].checked=false;all[i].closest(".op").classList.remove("s");}}
+      }else if(inp.value.indexOf("Nenhuma")!==0&&inp.checked){
+        var nn=os.querySelector('input[value^="Nenhuma"]');
+        if(nn){nn.checked=false;nn.closest(".op").classList.remove("s");}
+      }
+    }
+    // Clear error
+    var qc=op.closest(".qc");
+    if(qc){qc.classList.remove("er");var em=qc.querySelector(".em");if(em)em.classList.remove("on");}
+    return;
+  }
+
+  var so=e.target.closest(".so");
+  if(so){
+    e.preventDefault();
+    var inp=so.querySelector("input");
+    var all=so.parentElement.querySelectorAll(".so");
+    for(var i=0;i<all.length;i++)all[i].classList.remove("s");
+    so.classList.add("s");
+    inp.checked=true;
+    var qc=so.closest(".qc");
+    if(qc){qc.classList.remove("er");var em=qc.querySelector(".em");if(em)em.classList.remove("on");}
+  }
+});
+
+// Clear errors on typing
+document.addEventListener("input",function(e){
+  if(e.target.matches("input[type=text],textarea")){
+    if(e.target.value.trim()){var qc=e.target.closest(".qc");if(qc){qc.classList.remove("er");var em=qc.querySelector(".em");if(em)em.classList.remove("on");}}
+  }
+});
+
+// ---- Submit ----
+function doSubmit(){
+  save();
+  if(!validate())return;
+  if(SHEETS_URL==="https://script.google.com/macros/s/AKfycbybpy3-RsnqtBmz_h_gL8QPxIrbSw0mT-J-Mv8LXXH5HhsX4NwAluxnmz7q6kuclRMQ/exec"){alert("Configure a URL do Google Apps Script antes de enviar.\n\nVeja as instruções no arquivo INSTRUCOES_GOOGLE_SHEETS.md");return;}
+  document.getElementById("lo").style.display="flex";
+  allData.timestamp=new Date().toISOString();
+  fetch(SHEETS_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(allData)}).then(function(){
+    document.getElementById("lo").style.display="none";
+    document.getElementById("nav").style.display="none";
+    document.getElementById("hdr").style.display="none";
+    document.getElementById("box").innerHTML='<div style="text-align:center;padding:60px 0"><div class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><h2 style="font-size:24px;margin-bottom:12px">Questionário enviado com sucesso!</h2><p style="color:var(--txs);font-size:15px;max-width:480px;margin:0 auto;line-height:1.7">Obrigado por dedicar seu tempo. Suas informações serão fundamentais para o projeto de reestruturação.</p></div>';
+  }).catch(function(){
+    document.getElementById("lo").style.display="none";
+    alert("Erro ao enviar. Verifique sua conexão e tente novamente.");
+  });
+}
+
+// ---- Init ----
+render();
+</script>
+</body>
+</html>
